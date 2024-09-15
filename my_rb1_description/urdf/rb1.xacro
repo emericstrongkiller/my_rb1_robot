@@ -2,6 +2,19 @@
 
 <robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <gazebo reference="base_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="link_front_laser">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+    <gazebo reference="link_left_wheel">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+    <gazebo reference="link_right_wheel">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
     <!-- Parameters definition -->
     <xacro:property name="base_mass" value="23" />
     <xacro:property name="pi" value="3.14159265358979323846"/>
