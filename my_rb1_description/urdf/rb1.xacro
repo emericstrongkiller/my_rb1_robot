@@ -1,0 +1,241 @@
+<?xml version="1.0" ?>
+
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Parameters definition -->
+    <xacro:property name="base_mass" value="23" />
+    <xacro:property name="pi" value="3.14159265358979323846"/>
+    <xacro:property name="vert_kaki" value = "0.349 0.439 0.361 0.75"/>    
+
+    <!-- Link - base_footprint -->
+    <link name="base_footprint">
+    </link>
+
+    <!-- Joint - base_footprint / base_link -->
+    <joint name="joint_base_link" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.15" />
+        <child link="base_link" />
+        <parent link="base_footprint" />
+        <axis rpy="0 0 0" xyz="0 0 0" />
+        <limit effort="10000" velocity="1000" />
+        <joint_properties damping="1.0" friction="1.0" />
+    </joint>
+
+    <!-- Link - base_link -->
+    <link name="base_link">
+        <inertial>
+            <mass value="${base_mass}" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0.9727083" ixy="0" ixz="0" iyy="0.9727083" iyz="0" izz="0.71875" /> <!-- inertia matrix I : Ixx:m/12(3r²+h²)_Iyy:m/12(3r²+h²)_Izz:(mr²)/2 -->
+        </inertial>
+
+        <collision>
+            <origin xyz="0 0 0.15" rpy="0 0 0" />
+            <geometry>
+                <cylinder radius="0.25" length="0.30"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="0 0 0.15" rpy="0 0 0" />
+            <geometry>
+                <cylinder radius="0.25" length="0.30"/>
+            </geometry>
+            <material name="vert_kaki">
+                <color rgba="0.349 0.439 0.361 0.75" />
+            </material>
+        </visual>
+    </link>
+
+    <!-- Joint - base_link / front_laser -->
+    <joint name="joint_base_front_laser" type="continuous">
+        <origin rpy="${pi} 0 0" xyz="0.25 0.0 0.075" />
+        <child link="link_front_laser" />
+        <parent link="base_link" />
+        <axis rpy="0 0 0" xyz="0 0 1" />
+        <limit effort="10000" velocity="1000" />
+        <joint_properties damping="1.0" friction="1.0" />
+    </joint>
+
+    <!-- Link front_laser -->
+    <link name="link_front_laser">
+        <inertial>
+            <mass value="1"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0.00068958" ixy="0" ixz="0" iyy="0.00068958" iyz="0" izz="0.0003125" /> <!-- inertia matrix I : Ixx:m/12(3r²+h²)_Iyy:m/12(3r²+h²)_Izz:(mr²)/2 -->
+        </inertial>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <cylinder radius="0.05" length="0.06"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <cylinder radius="0.05" length="0.06"/>
+            </geometry>
+            <material name="rouge">
+                <color rgba="1 0 0 1" />
+            </material>
+        </visual>
+    </link>
+
+    <!-- Joint - base_link / left_wheel -->
+    <joint name="joint_base_left_wheel" type="continuous">
+        <origin rpy="0 0 0" xyz="0 0.20 0" />
+        <child link="link_left_wheel" />
+        <parent link="base_link" />
+        <axis rpy="0 0 0" xyz="0 1 0" />
+        <limit effort="10000" velocity="1000" />
+        <joint_properties damping="1.0" friction="1.0" />
+    </joint>
+
+    <!-- Link left_wheel -->
+    <link name="link_left_wheel">
+        <inertial>
+            <mass value="1"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0.00068958" ixy="0" ixz="0" iyy="0.00068958" iyz="0" izz="0.0003125" /> <!-- inertia matrix I : Ixx:m/12(3r²+h²)_Iyy:m/12(3r²+h²)_Izz:(mr²)/2 -->
+        </inertial>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+            <geometry>
+                <cylinder radius="0.025" length="0.08"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+            <geometry>
+                <cylinder radius="0.025" length="0.08"/>
+            </geometry>
+            <material name="rouge">
+                <color rgba="1 0 0 1" />
+            </material>
+        </visual>
+    </link>
+
+    <!-- Joint - base_link / right_wheel -->
+    <joint name="joint_base_right_wheel" type="continuous">
+        <origin rpy="0 0 0" xyz="0 -0.20 0" />
+        <child link="link_right_wheel" />
+        <parent link="base_link" />
+        <axis rpy="0 0 0" xyz="0 1 0" />
+        <limit effort="10000" velocity="1000" />
+        <joint_properties damping="1.0" friction="1.0" />
+    </joint>
+
+    <!-- Link right_wheel -->
+    <link name="link_right_wheel">
+        <inertial>
+            <mass value="1"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0.00068958" ixy="0" ixz="0" iyy="0.00068958" iyz="0" izz="0.0003125" /> <!-- inertia matrix I : Ixx:m/12(3r²+h²)_Iyy:m/12(3r²+h²)_Izz:(mr²)/2 -->
+        </inertial>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+            <geometry>
+                <cylinder radius="0.025" length="0.08"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+            <geometry>
+                <cylinder radius="0.025" length="0.08"/>
+            </geometry>
+            <material name="rouge">
+                <color rgba="1 0 0 1" />
+            </material>
+        </visual>
+    </link>
+
+    <!-- Joint - base_link / front_caster_wheel -->
+    <joint name="joint_front_caster_wheel" type="fixed">
+        <origin rpy="0 0 0" xyz="0.1 0 0" />
+        <child link="link_front_caster_wheel" />
+        <parent link="base_link" />
+        <limit effort="10000" velocity="1000" />
+        <joint_properties damping="1.0" friction="0" />
+    </joint>
+
+    <!-- Link front_caster_wheel -->
+    <link name="link_front_caster_wheel">
+        <inertial>
+            <mass value="0.01"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0.00000625" ixy="0" ixz="0" iyy="0.00000625" iyz="0" izz="0.00000625" /> <!-- inertia matrix I : 2/5 * m * r**2 = 0.000 006 25-->
+        </inertial>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="0.025"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="0.025"/>
+            </geometry>
+            <material name="purple">
+                <color rgba="1 0 1 1" />
+            </material>
+        </visual>
+    </link>
+
+    <!-- Joint - base_link / back_caster_wheel -->
+    <joint name="joint_back_caster_wheel" type="fixed">
+        <origin rpy="0 0 0" xyz="-0.1 0 0" />
+        <child link="link_back_caster_wheel" />
+        <parent link="base_link" />
+        <limit effort="10000" velocity="1000" />
+        <joint_properties damping="1.0" friction="0" />
+    </joint>
+
+    <!-- Link front_caster_wheel -->
+    <link name="link_back_caster_wheel">
+        <inertial>
+            <mass value="0.01"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0.00000625" ixy="0" ixz="0" iyy="0.00000625" iyz="0" izz="0.00000625" /> <!-- inertia matrix I : 2/5 * m * r**2 = 0.000 006 25-->
+        </inertial>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="0.025"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="0.025"/>
+            </geometry>
+            <material name="purple">
+                <color rgba="1 0 1 1" />
+            </material>
+        </visual>
+    </link>
+
+    <!--
+    <transmission name="tran_tail">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_tail">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor_joint_tail">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    -->
+
+</robot>
