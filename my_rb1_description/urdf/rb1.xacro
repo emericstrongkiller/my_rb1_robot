@@ -15,56 +15,8 @@
         <material>Gazebo/Blue</material>
     </gazebo>
 
-    <gazebo>
-        <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
-            <alwaysOn>true</alwaysOn>
-            <updateRate>20</updateRate>
-            <leftJoint>joint_base_left_wheel</leftJoint>
-            <rightJoint>joint_base_right_wheel</rightJoint>
-            <wheelSeparation>0.4</wheelSeparation>
-            <wheelDiameter>0.05</wheelDiameter>
-            <torque>10</torque>
-            <commandTopic>cmd_vel</commandTopic>
-            <odometryTopic>odom</odometryTopic>
-            <odometryFrame>odom</odometryFrame>
-            <robotBaseFrame>base_footprint</robotBaseFrame>
-        </plugin>
-    </gazebo>
-
-    <gazebo reference="link_front_laser">
-    <sensor type="ray" name="head_hokuyo_sensor">
-        <pose>0 0 0 0 0 0</pose>
-        <visualize>true</visualize>
-        <update_rate>20</update_rate>
-        <ray>
-            <scan>
-                <horizontal>
-                    <samples>720</samples>
-                    <resolution>1</resolution>
-                    <min_angle>-1.570796</min_angle>
-                    <max_angle>1.570796</max_angle>
-                </horizontal>
-            </scan>
-            <range>
-                <min>0.20</min>
-                <max>10.0</max>
-                <resolution>0.01</resolution>
-            </range>
-            <noise>
-                <type>gaussian</type>
-                <mean>0.0</mean>
-                <stddev>0.01</stddev>
-            </noise>
-        </ray>
-        <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-            <topicName>/laser/scan</topicName>
-            <frameName>sensor_laser</frameName>
-        </plugin>
-    </sensor>
-</gazebo>
-
     <!-- Parameters definition -->
-    <xacro:property name="base_mass" value="23" />
+    <xacro:property name="base_mass" value="20.5" />
     <xacro:property name="pi" value="3.14159265358979323846"/>
     <xacro:property name="vert_kaki" value = "0.349 0.439 0.361 0.75"/>    
 
@@ -75,11 +27,8 @@
     <!-- Joint - base_footprint / base_link -->
     <joint name="joint_base_link" type="fixed">
         <origin rpy="0 0 0" xyz="0 0 0.15" />
-        <child link="base_link" />
         <parent link="base_footprint" />
-        <axis rpy="0 0 0" xyz="0 0 0" />
-        <limit effort="10000" velocity="1000" />
-        <joint_properties damping="1.0" friction="1.0" />
+        <child link="base_link" />
     </joint>
 
     <!-- Link - base_link -->
@@ -87,18 +36,18 @@
         <inertial>
             <mass value="${base_mass}" />
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="0.9727083" ixy="0" ixz="0" iyy="0.9727083" iyz="0" izz="0.71875" /> <!-- inertia matrix I : Ixx:m/12(3r²+h²)_Iyy:m/12(3r²+h²)_Izz:(mr²)/2 -->
+            <inertia ixx="0.47406249999999994" ixy="0.0" ixz="0.0" iyy="0.47406249999999994" iyz="0.0" izz="0.640625" />
         </inertial>
 
         <collision>
-            <origin xyz="0 0 0.15" rpy="0 0 0" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <cylinder radius="0.25" length="0.30"/>
             </geometry>
         </collision>
 
         <visual>
-            <origin xyz="0 0 0.15" rpy="0 0 0" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <cylinder radius="0.25" length="0.30"/>
             </geometry>
@@ -108,50 +57,12 @@
         </visual>
     </link>
 
-    <!-- Joint - base_link / front_laser -->
-    <joint name="joint_base_front_laser" type="fixed">
-        <origin rpy="${pi} 0 0" xyz="0.25 0.0 0.075" />
-        <child link="link_front_laser" />
-        <parent link="base_link" />
-        <axis rpy="0 0 0" xyz="0 0 1" />
-        <limit effort="10000" velocity="1000" />
-        <joint_properties damping="1.0" friction="1.0" />
-    </joint>
-
-    <!-- Link front_laser -->
-    <link name="link_front_laser">
-        <inertial>
-            <mass value="1"/>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="0.00068958" ixy="0" ixz="0" iyy="0.00068958" iyz="0" izz="0.0003125" /> <!-- inertia matrix I : Ixx:m/12(3r²+h²)_Iyy:m/12(3r²+h²)_Izz:(mr²)/2 -->
-        </inertial>
-
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <cylinder radius="0.05" length="0.06"/>
-            </geometry>
-        </collision>
-
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <cylinder radius="0.05" length="0.06"/>
-            </geometry>
-            <material name="rouge">
-                <color rgba="1 0 0 1" />
-            </material>
-        </visual>
-    </link>
-
     <!-- Joint - base_link / left_wheel -->
     <joint name="joint_base_left_wheel" type="continuous">
-        <origin rpy="0 0 0" xyz="0 0.20 0" />
+        <axis rpy="0 0 0" xyz="0 1 0" />
+        <origin rpy="0 0 0" xyz="0 0.2 -0.15" />
         <child link="link_left_wheel" />
         <parent link="base_link" />
-        <axis rpy="0 0 0" xyz="0 1 0" />
-        <limit effort="10000" velocity="1000" />
-        <joint_properties damping="1.0" friction="1.0" />
     </joint>
 
     <!-- Link left_wheel -->
@@ -159,7 +70,7 @@
         <inertial>
             <mass value="1"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="0.00068958" ixy="0" ixz="0" iyy="0.00068958" iyz="0" izz="0.0003125" /> <!-- inertia matrix I : Ixx:m/12(3r²+h²)_Iyy:m/12(3r²+h²)_Izz:(mr²)/2 -->
+            <inertia ixx="0.00034687500000000007" ixy="0.0" ixz="0.0" iyy="0.00034687500000000007" iyz="0.0" izz="0.0004687500000000001" />
         </inertial>
 
         <collision>
@@ -182,12 +93,10 @@
 
     <!-- Joint - base_link / right_wheel -->
     <joint name="joint_base_right_wheel" type="continuous">
-        <origin rpy="0 0 0" xyz="0 -0.20 0" />
+        <axis rpy="0 0 0" xyz="0 1 0" />
+        <origin rpy="0 0 0" xyz="0 -0.20 -0.15" />
         <child link="link_right_wheel" />
         <parent link="base_link" />
-        <axis rpy="0 0 0" xyz="0 1 0" />
-        <limit effort="10000" velocity="1000" />
-        <joint_properties damping="1.0" friction="1.0" />
     </joint>
 
     <!-- Link right_wheel -->
@@ -195,7 +104,7 @@
         <inertial>
             <mass value="1"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="0.00068958" ixy="0" ixz="0" iyy="0.00068958" iyz="0" izz="0.0003125" /> <!-- inertia matrix I : Ixx:m/12(3r²+h²)_Iyy:m/12(3r²+h²)_Izz:(mr²)/2 -->
+            <inertia ixx="0.00034687500000000007" ixy="0.0" ixz="0.0" iyy="0.00034687500000000007" iyz="0.0" izz="0.0004687500000000001" />
         </inertial>
 
         <collision>
@@ -217,24 +126,23 @@
     </link>
 
     <!-- Joint - base_link / front_caster_wheel -->
-    <joint name="joint_front_caster_wheel" type="continuous">
-        <origin rpy="0 0 0" xyz="0.1 0 0" />
-        <child link="link_front_caster_wheel" />
+    <joint name="joint_front_caster_wheel" type="fixed">
+        <origin rpy="0 0 0" xyz="0.1 0.0 -0.15" />
         <parent link="base_link" />
-        <limit effort="10000" velocity="1000" />
-        <joint_properties damping="1.0" friction="0.1" />
+        <child link="link_front_caster_wheel" />
     </joint>
 
     <!-- Link front_caster_wheel -->
     <link name="link_front_caster_wheel">
         <inertial>
-            <mass value="0.01"/>
+            <mass value="0.5"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="0.00000625" ixy="0" ixz="0" iyy="0.00000625" iyz="0" izz="0.00000625" /> <!-- inertia matrix I : 2/5 * m * r**2 = 0.000 006 25-->
+            <inertia ixx="0.00012500000000000003" ixy="0.0" ixz="0.0" iyy="0.00012500000000000003" iyz="0.0" izz="0.00012500000000000003" />
         </inertial>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
+            <contact_coefficients mu="0.0" kp="0.0" kd="0.0" /> 
             <geometry>
                 <sphere radius="0.025"/>
             </geometry>
@@ -252,20 +160,18 @@
     </link>
 
     <!-- Joint - base_link / back_caster_wheel -->
-    <joint name="joint_back_caster_wheel" type="continuous">
-        <origin rpy="0 0 0" xyz="-0.1 0 0" />
-        <child link="link_back_caster_wheel" />
+    <joint name="joint_back_caster_wheel" type="fixed">
+        <origin rpy="0 0 0" xyz="-0.1 0 -0.15" />
         <parent link="base_link" />
-        <limit effort="10000" velocity="1000" />
-        <joint_properties damping="1.0" friction="0.1" />
+        <child link="link_back_caster_wheel" />
     </joint>
 
-    <!-- Link front_caster_wheel -->
+    <!-- Link back_caster_wheel -->
     <link name="link_back_caster_wheel">
         <inertial>
-            <mass value="0.01"/>
+            <mass value="0.5"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="0.00000625" ixy="0" ixz="0" iyy="0.00000625" iyz="0" izz="0.00000625" /> <!-- inertia matrix I : 2/5 * m * r**2 = 0.000 006 25-->
+            <inertia ixx="0.00012500000000000003" ixy="0.0" ixz="0.0" iyy="0.00012500000000000003" iyz="0.0" izz="0.00012500000000000003" />
         </inertial>
 
         <collision>
@@ -286,17 +192,106 @@
         </visual>
     </link>
 
-    <!--
-    <transmission name="tran_tail">
-        <type>transmission_interface/SimpleTransmission</type>
-        <joint name="joint_tail">
-            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-        </joint>
-        <actuator name="motor_joint_tail">
-            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-            <mechanicalReduction>1</mechanicalReduction>
-        </actuator>
-    </transmission>
-    -->
+    <!-- Joint - base_link / front_laser -->
+    <joint name="joint_base_front_laser" type="fixed">
+        <origin rpy="${pi} 0 0" xyz="0.25 0.0 0.075" />
+        <parent link="base_link" />
+        <child link="link_front_laser" />
+    </joint>
 
+    <!-- Link front_laser -->
+    <link name="link_front_laser">
+    </link>
+
+    <!-- Gazebo friction and material properties for left_wheel -->
+    <gazebo reference="link_left_wheel">
+        <mu1 value="5.0"/>
+		<mu2 value="0.5"/>
+		<kp value="10000000.0" />
+		<kd value="1.0" />
+		<fdir1 value="1 0 0"/>
+    </gazebo>
+
+    <!-- Gazebo friction and material properties for right_wheel -->
+    <gazebo reference="link_right_wheel">
+        <mu1 value="5.0"/>
+		<mu2 value="0.5"/>
+		<kp value="10000000.0" />
+		<kd value="1.0" />
+		<fdir1 value="1 0 0"/>
+    </gazebo>
+
+    <!-- Gazebo friction and material properties for front_caster -->
+    <gazebo reference="link_front_caster_wheel">
+        <mu1 value="0.0"/>
+        <mu2 value="0.0"/>
+        <kp value="10000000.0" />
+        <kd value="100.0" />
+        <fdir1 value="0 0 1"/>
+        <material>Gazebo/Gray</material>
+    </gazebo>
+
+    <!-- Gazebo friction and material properties for back_caster -->
+    <gazebo reference="link_back_caster_wheel">
+        <mu1 value="0.0"/>
+        <mu2 value="0.0"/>
+        <kp value="10000000.0" />
+        <kd value="100.0" />
+        <fdir1 value="0 0 1"/>
+        <material>Gazebo/Gray</material>
+    </gazebo>
+
+    <!-- Gazebo plugin for Differential drive controller -->
+    <gazebo>
+        <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>20</updateRate>
+            <leftJoint>joint_base_left_wheel</leftJoint>
+            <rightJoint>joint_base_right_wheel</rightJoint>
+            <publishWheelTF>true</publishWheelTF>
+            <wheelSeparation>0.4</wheelSeparation>
+            <wheelDiameter>0.05</wheelDiameter>
+            <torque>10</torque>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_footprint</robotBaseFrame>
+        </plugin>
+    </gazebo>
+
+    <!-- Gazebo configuration for the front laser sensor -->
+    <gazebo reference="link_front_laser">
+        <sensor type="ray" name="head_hokuyo_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>20</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.570796</min_angle>
+                        <max_angle>1.570796</max_angle>
+                    </horizontal>
+                </scan>
+                <!-- Configure the range properties -->
+                <range>
+                    <min>0.1</min>
+                    <max>10.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <!-- Configure the noise properties -->
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <!-- Attach a Gazebo plugin to the sensor for ROS integration -->
+            <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+                <topicName>/scan</topicName>
+                <frameName>sensor_laser</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
 </robot>
